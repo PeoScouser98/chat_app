@@ -9,7 +9,18 @@ import App from "./App";
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: true,
+			staleTime: 15 * 60 * 1000,
+			cacheTime: 15 * 60 * 1000,
+			refetchOnMount: true,
+			retry: true,
+			retryOnMount: true,
+		},
+	},
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<QueryClientProvider client={queryClient}>
