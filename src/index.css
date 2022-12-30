@@ -1,0 +1,29 @@
+@import url(https://cdn.jsdelivr.net/npm/daisyui@2.42.1/dist/full.css);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.error-message {
+		@apply text-error font-medium;
+	}
+	.btn {
+		@apply normal-case;
+	}
+	.loader-sm {
+		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-6 h-6  border-[3px];
+	}
+	.loader-md {
+		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-10 h-10 border-[3px];
+	}
+	.loader-lg {
+		@apply pointer-events-none rounded-full border-transparent border-t-primary animate-spin w-14 h-14 border-[4px];
+	}
+	.scroll::-webkit-scrollbar {
+		@apply w-1;
+	}
+	.scroll::-webkit-scrollbar-thumb {
+		@apply bg-primary;
+	}
+}
