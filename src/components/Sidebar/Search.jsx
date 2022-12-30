@@ -3,43 +3,57 @@ import { useState } from "react";
 import { BsChatSquareText, BsSearch } from "react-icons/bs";
 
 import Avatar from "../Avatar";
-import Loading from "../Loading";
 
-import tw from "tailwind-styled-components";
-import { createNewChat, findChat, findUserChat } from "../../api/chat.api";
 import { useContext } from "react";
+import tw from "tailwind-styled-components";
+import { findChat, findUserChat } from "../../api/chat.api";
 import { AuthContext } from "../../context/AuthContext";
+import { ChatContext } from "../../context/ChatContext";
+import { useQuery } from "react-query";
+import { useRef } from "react";
+import Loading from "../Loading";
+import { AppContext } from "../../context/AppContext";
 
-const SearchControl = tw.div`flex justify-start items-center gap-2 bg-base-200 px-4 py-2 rounded-md`;
-const SearchInput = tw.input`input input-sm focus:outline-none bg-inherit`;
+const SearchControl = tw.div`flex justify-start items-center gap-2 bg-base-200 px-4 py-2 rounded-md `;
+const SearchInput = tw.input`input input-sm focus:outline-none bg-inherit flex-1`;
 const SearchResults = tw.ul`dropdown-content menu shadow w-full absolute mt-1 rounded-md bg-base-100`;
 
 const Search = () => {
 	const [results, setResults] = useState([]);
 	const { currentUser } = useContext(AuthContext);
-	const findUser = _.debounce(async (e) => {
-		const res = await findUserChat(e.target.value);
-		if (Array.isArray(res)) {
-			setResults(res);
-		}
-	}, 1000);
+	const [keywords, setKeywords] = useState("");
+	const { createNewChatMutation } = useContext(ChatContext);
+	const { setCurrentChat } = useContext(AppContext);
+	const inputRef = useRef();
 
+	const { data, isFetching, isError } = useQuery({
+		queryKey: ["searchUserChat", keywords],
+		queryFn: () => findUserChat(keywords),
+	});
+
+	const debounceSearch = _.debounce(() => {
+		setKeywords(inputRef.current.value);
+		setResults(data);
+	}, 1000);
 	const handleSelect = async (user) => {
-		// if there is no chat with this user -> create new
-		const existedChat = await findChat(user);
-		if (existedChat) {
-			setCurrentChat(existedChat);
-		} else {
-			const newChat = await createNewChat();
+		const res = await findChat(user);
+		if (res.status === 200) {
+			setCurrentChat(res);
 		}
-		// if there exist chat with this user -> set current chat
+		if (res.status === 404) {
+			createNewChatMutation.mutate({
+				members: [currentUser, user],
+				messages: [],
+			});
+		}
 	};
 
 	return (
 		<div className="dropdown mb-6">
 			<SearchControl tabIndex={0}>
 				<BsSearch />
-				<SearchInput type="text" placeholder="Find an user ..." onChange={(e) => findUser(e)} />
+				<SearchInput type="text" placeholder="Find an user ..." ref={inputRef} onChange={debounceSearch} />
+				{isFetching && <Loading />}
 			</SearchControl>
 			<SearchResults tabIndex={0}>
 				{results.map((user, index) => {
