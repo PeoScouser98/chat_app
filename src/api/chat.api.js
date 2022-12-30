@@ -26,7 +26,7 @@ export const findUserChat = async (keyword) => {
 
 export const findChat = async (user) => {
 	try {
-		return await instance.post(`/chats/${user}/find-chat`);
+		return await instance.get(`/chats/${user._id}/find-chat`);
 	} catch (error) {
 		console.log(error.message);
 	}
@@ -34,6 +34,7 @@ export const findChat = async (user) => {
 
 export const createNewChat = async (data) => {
 	try {
+		console.log(data);
 		return await instance.post("/chats", data);
 	} catch (error) {
 		console.log(error.message);
