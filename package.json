@@ -4,12 +4,13 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
+		"dev": "vite --mode development",
+		"build": "vite build --mode production",
 		"preview": "vite preview"
 	},
 	"dependencies": {
 		"@react-query-firebase/firestore": "^1.0.0-dev.7",
+		"@rollup/plugin-alias": "^4.0.2",
 		"axios": "^1.2.2",
 		"daisyui": "^2.42.1",
 		"date-fns": "^2.29.3",
@@ -31,6 +32,7 @@
 		"@types/react-dom": "^18.0.8",
 		"@vitejs/plugin-react": "^2.2.0",
 		"autoprefixer": "^10.4.13",
+		"dotenv": "^16.0.3",
 		"postcss": "^8.4.19",
 		"tailwind-styled-components": "^2.2.0",
 		"tailwindcss": "^3.2.3",
