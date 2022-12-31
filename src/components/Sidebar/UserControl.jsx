@@ -8,14 +8,13 @@ const UserControl = () => {
 	const { currentUser, setAuthenticated, setCurrentUser } = useContext(AuthContext);
 
 	const signout = () => {
-		console.log("ahhihih");
 		setAuthenticated(false);
 		setCurrentUser(null);
 		localStorage.clear();
 	};
 	return (
 		<div className="flex justify-between items-center h-fit px-0 mb-10">
-			<UserInfo photoUrl={currentUser?.avatar} username={currentUser?.username} text="online" status={true} />
+			<UserInfo avatar={currentUser?.avatar} username={currentUser?.username} text="online" status={true} />
 
 			<div className="tooltip tooltip-bottom tooltip-primary" data-tip="Sign out">
 				<button className="btn btn-ghost text-xl" onClick={signout}>

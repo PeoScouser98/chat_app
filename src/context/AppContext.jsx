@@ -2,7 +2,6 @@ import "https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import io from "socket.io-client";
-
 import { AuthContext } from "./AuthContext";
 
 const AppContext = createContext({});
@@ -10,6 +9,7 @@ const AppContext = createContext({});
 const AppProvider = ({ children }) => {
 	const { currentUser } = useContext(AuthContext);
 	const [currentChat, setCurrentChat] = useState(null);
+
 	const [chattingUser, setChattingUser] = useState(null);
 
 	const [callStatus, setCallStatus] = useState(false); // status -> open or clost video call modal
@@ -22,21 +22,21 @@ const AppProvider = ({ children }) => {
 
 	const [stream, setStream] = useState(null);
 	const [remoteStream, setRemoteStream] = useState(null);
-	const socket = useMemo(() => io("http://localhost:3001"));
+	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
 
 	useEffect(() => {
-		socket.emit("receive_notification", currentUser);
+		socket.emit("online", currentUser);
+
 		socket.on("receive_invitation", (data) => {
-			toast(data.message);
+			toast(data.message, {
+				position: "top-center",
+			});
 		});
-		socket.on("receive_message", (data) => {
-			console.log(data);
-		});
+
 		// socket.emit("receive_call", currentUser);
 
 		//  show video call modal if exist incoming call
 		socket.on("get_call", (data) => {
-			console.log("comming call:>>>", data.currentChat);
 			setCurrentChat(data.currentChat);
 			setChattingUser(data.sender);
 			navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((mediaStream) => {
@@ -61,11 +61,12 @@ const AppProvider = ({ children }) => {
 			}
 		});
 		return () => {
+			socket.off("notify_user_online");
 			socket.off("receive_invitation");
 			socket.off("get_call");
 			socket.off("call_response");
 		};
-	}, [socket]);
+	}, [socket, currentChat]);
 
 	useEffect(() => {
 		const peer = new Peer(localStorage.getItem("auth"));

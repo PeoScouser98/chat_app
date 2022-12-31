@@ -8,9 +8,9 @@ export const getChats = async () => {
 	}
 };
 
-export const sendMessage = async (id, data) => {
+export const sendMessage = async ({ chatId, message }) => {
 	try {
-		return await instance.post(`/chats/${id}`, data);
+		return await instance.patch(`/chats/${chatId}/send-message`, message);
 	} catch (error) {
 		console.log(error.message);
 	}

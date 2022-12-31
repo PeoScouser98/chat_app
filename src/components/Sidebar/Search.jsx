@@ -16,7 +16,7 @@ import { AppContext } from "../../context/AppContext";
 
 const SearchControl = tw.div`flex justify-start items-center gap-2 bg-base-200 px-4 py-2 rounded-md `;
 const SearchInput = tw.input`input input-sm focus:outline-none bg-inherit flex-1`;
-const SearchResults = tw.ul`dropdown-content menu shadow w-full absolute mt-1 rounded-md bg-base-100`;
+const SearchResults = tw.ul`dropdown-content menu shadow w-full absolute mt-1 gap-2 rounded-md bg-base-100`;
 
 const Search = () => {
 	const [results, setResults] = useState([]);
@@ -29,12 +29,15 @@ const Search = () => {
 	const { data, isFetching, isError } = useQuery({
 		queryKey: ["searchUserChat", keywords],
 		queryFn: () => findUserChat(keywords),
+		enabled: keywords.length > 0,
+		onSuccess: (data) => console.log(data),
 	});
 
 	const debounceSearch = _.debounce(() => {
 		setKeywords(inputRef.current.value);
 		setResults(data);
 	}, 1000);
+
 	const handleSelect = async (user) => {
 		const res = await findChat(user);
 		if (res.status === 200) {
@@ -52,23 +55,24 @@ const Search = () => {
 		<div className="dropdown mb-6">
 			<SearchControl tabIndex={0}>
 				<BsSearch />
-				<SearchInput type="text" placeholder="Find an user ..." ref={inputRef} onChange={debounceSearch} />
+				<SearchInput type="search" placeholder="Find an user ..." ref={inputRef} onChange={debounceSearch} />
 				{isFetching && <Loading />}
 			</SearchControl>
 			<SearchResults tabIndex={0}>
-				{results.map((user, index) => {
-					return (
-						<li onClick={() => handleSelect(user)} key={index}>
-							<div className="flex justify-between items-center gap-5">
-								<div className="flex items-center gap-3">
-									<Avatar style={{ width: "32px", height: "32px" }} imageUrl={user?.avatar} />
-									<h3>{user?.username}</h3>
+				{Array.isArray(results) &&
+					results.map((user, index) => {
+						return (
+							<li onClick={() => handleSelect(user)} key={index}>
+								<div className="flex justify-between items-center gap-5">
+									<div className="flex items-center gap-3">
+										<Avatar style={{ width: "32px", height: "32px" }} imageUrl={user?.avatar} />
+										<h3>{user?.username}</h3>
+									</div>
+									<BsChatSquareText className="text-lg" />
 								</div>
-								<BsChatSquareText className="text-lg" />
-							</div>
-						</li>
-					);
-				})}
+							</li>
+						);
+					})}
 			</SearchResults>
 		</div>
 	);

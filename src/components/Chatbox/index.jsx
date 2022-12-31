@@ -1,16 +1,18 @@
 import tw from "tailwind-styled-components";
 import ChatBubble from "./ChatBubble";
+import ChatForm from "./ChatForm";
+import ChatHeader from "./ChatHeader";
+import ChatBox from "./ChatBox";
+import { Fragment } from "react";
 
-const ChatsContainer = tw.div`flex flex-col justify-start gap-3 overflow-y-scroll scroll p-8 h-full`;
-
-const ChatBox = () => {
+const ChatWindow = () => {
 	return (
-		<ChatsContainer>
-			{/* <ChatHeader/> */}
-			{Array.isArray(messages) && messages?.map((msg, index) => <ChatBubble messageData={msg} key={index} />)}
+		<Fragment>
+			<ChatHeader />
+			<ChatBox />
 			<ChatForm />
-		</ChatsContainer>
+		</Fragment>
 	);
 };
 
-export default ChatBox;
+export default ChatWindow;

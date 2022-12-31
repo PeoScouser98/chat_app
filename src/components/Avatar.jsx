@@ -1,9 +1,9 @@
 import React from "react";
 
-const Avatar = ({ imageUrl, isOnline }) => {
+const Avatar = ({ imageUrl, isOnline, size }) => {
 	return (
-		<div className={`avatar ${isOnline && "online"}`}>
-			<div className="w-12 h-12 rounded-full">
+		<div className={isOnline ? "avatar online" : "avatar"}>
+			<div className={`rounded-full`} style={{ width: size + "rem", height: size + "rem" }}>
 				<img src={imageUrl} />
 			</div>
 		</div>

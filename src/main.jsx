@@ -5,9 +5,9 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import { Slide } from "react-toastify";
 import App from "./App";
-
 import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
+import "dotenv";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -18,6 +18,7 @@ const queryClient = new QueryClient({
 			refetchOnMount: true,
 			retry: true,
 			retryOnMount: true,
+			// onSettled: (data) => console.log("data", data),
 		},
 	},
 });

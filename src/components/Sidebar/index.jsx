@@ -5,7 +5,7 @@ import UserControl from "./UserControl";
 
 const DrawerSide = tw.aside`drawer-side `;
 const DrawerOverlay = tw.label`drawer-overlay`;
-const DrawerSideMenu = tw.div`menu p-4 w-80 bg-base-300 text-base-content`;
+const DrawerSideMenu = tw.div`menu p-4 w-80 bg-base-300 text-base-content bg-neutral`;
 const Sidebar = () => {
 	return (
 		<DrawerSide>
@@ -13,7 +13,6 @@ const Sidebar = () => {
 			<DrawerSideMenu>
 				<UserControl />
 				<Search />
-				{/* <RoomList /> */}
 				<ChatsList />
 			</DrawerSideMenu>
 		</DrawerSide>
