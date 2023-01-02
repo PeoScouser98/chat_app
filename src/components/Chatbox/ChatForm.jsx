@@ -15,8 +15,8 @@ import { ChatContext } from "@/context/ChatContext";
 // functions
 import uploadImage from "@/firebase/upload";
 
-const Form = tw.form`relative w-full flex justify-between items-center p-1 text-white`;
-const FormInput = tw.input`input input-bordered flex-1 focus:boder-2 focus:border-primary focus:outline-none`;
+const Form = tw.form`relative w-full flex justify-between items-center p-1 `;
+const FormInput = tw.input`input input-bordered flex-1 focus:boder-2 focus:border-primary focus:outline-none text-white`;
 const FormButtonGroup = tw.div`flex justify-end items-center gap-4 absolute top-1/2 -translate-y-1/2 right-2`;
 
 const ChatForm = () => {
@@ -51,10 +51,13 @@ const ChatForm = () => {
 	// send message
 	const handleSendMessage = async (data) => {
 		try {
-			if (data.image.length === 0) {
-				delete data.image;
+			console.log(data);
+			if (data.text.length === 0 && data.file.length === 0) return;
+			if (data.file.length === 0) {
+				delete data.file;
 			} else {
-				data.image = await uploadImage(data.image[0]);
+				data.file = await uploadImage(data.file[0]);
+				console.log("attach image :>> ", data.file);
 			}
 			sendMessageMutation.mutate({
 				chatId: currentChat._id,
@@ -72,7 +75,7 @@ const ChatForm = () => {
 		<Form onSubmit={handleSubmit(handleSendMessage)}>
 			<FormInput
 				placeholder="Message ..."
-				{...register("text", { required: true })}
+				{...register("text", { required: false })}
 				ref={(e) => {
 					ref(e);
 					chatInputRef.current = e;
@@ -80,7 +83,7 @@ const ChatForm = () => {
 			/>
 			<FormButtonGroup>
 				<div className="dropdown dropdown-hover dropdown-top dropdown-end">
-					<label tabIndex={0} className="text-xl mt-1">
+					<label tabIndex={0} className="text-xl mt-1 hover:text-white">
 						<BsEmojiSmile aria-hidden />
 					</label>
 
@@ -89,9 +92,9 @@ const ChatForm = () => {
 					</div>
 				</div>
 				<Tooltip dataTip="Attach image">
-					<label htmlFor="image" className="text-xl">
+					<label htmlFor="image" className="text-xl hover:text-white">
 						<BiImageAdd aria-hidden />
-						<input type="file" className="hidden" id="image" {...register("image")} />
+						<input type="file" className="hidden" id="image" {...register("file", { required: false })} />
 					</label>
 				</Tooltip>
 				<button className="btn btn-primary btn-sm gap-2">
