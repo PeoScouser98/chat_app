@@ -13,7 +13,8 @@ const NavStart = tw.div`flex-1`;
 const NavEnd = tw.div`flex-none px-4`;
 
 const ChatHeader = () => {
-	const { currentChat } = useContext(AppContext);
+	const { currentChat, makeVideoCall } = useContext(AppContext);
+
 	return (
 		<Navbar>
 			<NavStart className="flex-1">
@@ -22,8 +23,10 @@ const ChatHeader = () => {
 			<NavEnd>
 				<Menu horizontal={true}>
 					<Tooltip dataTip={"Video call"} position="bottom">
-						<MenuItem>
-							<BsCameraVideo aria-hidden className="text-xl text-base-content" />
+						<MenuItem callback={() => makeVideoCall(currentChat)}>
+							<button>
+								<BsCameraVideo aria-hidden className="text-xl text-base-content" />
+							</button>
 						</MenuItem>
 					</Tooltip>
 					<Tooltip dataTip={"Add Friend"} position="bottom">

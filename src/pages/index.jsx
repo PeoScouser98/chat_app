@@ -1,3 +1,4 @@
+import VideoCallModal from "@/components/Modals/VideoCallModal";
 import { useContext } from "react";
 import tw from "tailwind-styled-components";
 import ChatWindow from "../components/Chatbox/index";
@@ -12,12 +13,12 @@ const DrawerToggle = tw.input`drawer-toggle`;
 export const DrawerToggleButton = tw.label`btn btn-ghost btn-square z-[999] text-xl`;
 
 const ChatPage = () => {
-	const { currentChat } = useContext(AppContext);
-
+	const { currentChat, callStatus } = useContext(AppContext);
 	return (
 		<DrawerWrapper data-theme="dark">
 			<DrawerToggle id="sidebar-toggle" type="checkbox" />
 			<DrawerContent>{currentChat === null ? <HeroBanner /> : <ChatWindow />}</DrawerContent>
+			{callStatus && <VideoCallModal />}
 			<Sidebar />
 		</DrawerWrapper>
 	);

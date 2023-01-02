@@ -27,7 +27,7 @@ instance.interceptors.response.use(
 				const newAccessToken = await refreshToken(authId);
 				if (typeof newAccessToken === "string") {
 					instance.setAccessToken(newAccessToken);
-					console.log("newAccessToken :>> ", newAccessToken);
+					console.log("New access token :>> ", newAccessToken);
 					return instance.request(config);
 				}
 			}

@@ -1,8 +1,8 @@
 import React from "react";
 
-export const MenuItem = ({ children, tw }) => {
+export const MenuItem = ({ children, tw, callback }) => {
 	return (
-		<li className={`${tw}`}>
+		<li className={`${tw}`} onClick={callback}>
 			<a>{children}</a>
 		</li>
 	);

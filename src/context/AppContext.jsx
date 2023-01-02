@@ -14,14 +14,14 @@ const AppProvider = ({ children }) => {
 
 	const [callStatus, setCallStatus] = useState(false); // status -> open or clost video call modal
 	const [callAccepted, setCallAccepted] = useState(false); // status that call is accepted by chatting user or not
-	const [callData, setCallData] = useState(); // call data including Call maker & Call listener
+	const [commingCall, setCommingCall] = useState(); // call data including Call maker & Call listener
 
 	const instancePeer = useRef(null); // instance peer connection
 	const remoteVideoRef = useRef(null); // remote video ref
 	const currentUserVideoRef = useRef(null); // current user video ref
 
 	const [stream, setStream] = useState(null);
-	const [remoteStream, setRemoteStream] = useState(null);
+
 	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
 
 	useEffect(() => {
@@ -33,18 +33,16 @@ const AppProvider = ({ children }) => {
 			});
 		});
 
-		// socket.emit("receive_call", currentUser);
-
 		//  show video call modal if exist incoming call
 		socket.on("get_call", (data) => {
 			setCurrentChat(data.currentChat);
-			setChattingUser(data.sender);
-			navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((mediaStream) => {
-				// setStream(mediaStream);
+
+			navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((mediaStream) => {
+				setStream(mediaStream);
 				currentUserVideoRef.current.srcObject = mediaStream;
 				currentUserVideoRef.current.play();
 			});
-			setCallData(data);
+			setCommingCall(data);
 			setCallStatus(true);
 		});
 		socket.on("call_response", (data) => {
@@ -54,7 +52,7 @@ const AppProvider = ({ children }) => {
 		socket.on("end_call", (data) => {
 			setCallStatus(data.signal);
 			setCallAccepted(data.signal);
-			setCallData(undefined);
+			setCommingCall(undefined);
 			if (stream) {
 				const mediaTracks = stream.getTracks();
 				mediaTracks.forEach((track) => track.stop());
@@ -94,13 +92,13 @@ const AppProvider = ({ children }) => {
 	}, []);
 
 	// * make video call
-	const makeVideoCall = (remotePeerId, chattingUser, currentChat) => {
+	const makeVideoCall = (currentChat) => {
 		setCallStatus(true);
-		console.log(chattingUser);
+
 		socket.emit("call_user", {
 			sender: currentUser,
-			receiver: chattingUser,
-			currentChat: currentChat,
+			receiver: currentChat.chattingUser,
+			currentChat: { ...currentChat, chattingUser: currentUser },
 		});
 		const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 		getUserMedia({ video: true, audio: true }, (mediaStream) => {
@@ -110,8 +108,9 @@ const AppProvider = ({ children }) => {
 			currentUserVideoRef.current.play();
 
 			// show remote media stream of call listener
-			const call = instancePeer.current.call(remotePeerId, mediaStream);
+			const call = instancePeer.current.call(currentChat.chattingUser?._id, mediaStream);
 			call.on("stream", (remoteStream) => {
+				console.log("remoteStream :>> ", remoteStream);
 				remoteVideoRef.current.srcObject = remoteStream;
 				remoteVideoRef.current.play();
 			});
@@ -122,7 +121,7 @@ const AppProvider = ({ children }) => {
 	const answerCall = () => {
 		setCallAccepted(true);
 		socket.emit("answer_call", {
-			receiver: callData.sender,
+			receiver: commingCall.sender,
 			signal: true,
 		});
 	};
@@ -131,22 +130,26 @@ const AppProvider = ({ children }) => {
 	const endCall = () => {
 		setCallAccepted(false);
 		setCallStatus(false);
-		setCallData(undefined);
+		setCommingCall(undefined);
 		const mediaTracks = stream.getTracks();
 		mediaTracks.forEach((track) => track.stop());
 		socket.emit("end_call", {
-			receiver: chattingUser,
+			receiver: currentChat.chattingUser,
 			signal: false,
 		});
 	};
 
 	const toggleMic = (e) => {
-		const mediaStreams = stream.getTracks();
-		mediaStreams[0].enabled = e.target.checked;
+		try {
+			const mediaStreams = stream.getTracks();
+			mediaStreams[0].enabled = !e.target.checked;
+		} catch (error) {
+			console.log("error:>>", error.message);
+		}
 	};
 	const toggleCamera = (e) => {
 		const mediaStreams = stream.getTracks();
-		mediaStreams[1].enabled = e.target.checked;
+		mediaStreams[1].enabled = !e.target.checked;
 	};
 
 	return (
@@ -156,7 +159,7 @@ const AppProvider = ({ children }) => {
 				stream,
 				currentChat,
 				chattingUser,
-				callData,
+				commingCall,
 				callAccepted,
 				callStatus,
 				instancePeer,
@@ -164,7 +167,7 @@ const AppProvider = ({ children }) => {
 				currentUserVideoRef,
 				setCurrentChat,
 				setChattingUser,
-				setCallData,
+				setCallData: setCommingCall,
 				setCallAccepted,
 				setCallStatus,
 				makeVideoCall,

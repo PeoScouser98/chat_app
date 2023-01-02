@@ -22,7 +22,7 @@ const ChatBubble = ({ messageData }) => {
 	const scrollRef = useRef();
 
 	useEffect(() => {
-		scrollRef?.current.scrollIntoView({ behavior: "smooth" });
+		scrollRef?.current.scrollIntoView({ behavior: "auto" });
 	}, [messageData]);
 
 	// const { chattingUser } = currentChat;
@@ -30,7 +30,7 @@ const ChatBubble = ({ messageData }) => {
 	return (
 		<Message className={isCurrentUser ? "chat chat-end" : "chat chat-start"} ref={scrollRef}>
 			<div className="chat-image ">
-				<Avatar imageUrl={sender?.avatar} size={3} />
+				<Avatar imageUrl={sender?.avatar} size={10} />
 			</div>
 			<ChatHeader>{sender?.username}</ChatHeader>
 			{messageData.image && <img src={messageData.image} className="w-32 h-32 object-cover object-center rounded-lg" />}
