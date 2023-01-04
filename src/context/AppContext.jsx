@@ -22,7 +22,11 @@ const AppProvider = ({ children }) => {
 
 	const [stream, setStream] = useState(null);
 
-	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
+	const socket = useMemo(() =>
+		io(import.meta.env.VITE_SERVER, {
+			credentials: true,
+		}),
+	);
 
 	useEffect(() => {
 		socket.emit("online", currentUser);
