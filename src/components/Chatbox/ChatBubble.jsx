@@ -3,9 +3,9 @@ import { collectionGroup } from "firebase/firestore";
 import { useState } from "react";
 import { useContext, useEffect, useRef } from "react";
 import tw from "tailwind-styled-components";
-import { AppContext } from "../../context/AppContext";
-import { AuthContext } from "../../Context/AuthContext";
-import formatDate from "../../helpers/formatDate";
+import { AppContext } from "@/context/AppContext";
+import { AuthContext } from "@/context/AuthContext";
+import formatDate from "@/helpers/formatDate";
 import Avatar from "../Avatar";
 
 const Message = tw.div`chat`;
