@@ -22,13 +22,10 @@ const AppProvider = ({ children }) => {
 
 	const [stream, setStream] = useState(null);
 
-	const socket = useMemo(() =>
-		io(import.meta.env.VITE_SERVER, {
-			credentials: true,
-		}),
-	);
+	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
 
 	useEffect(() => {
+		console.log("vite server :>> ", import.meta.env.VITE_SERVER);
 		socket.emit("online", currentUser);
 
 		socket.on("receive_invitation", (data) => {
