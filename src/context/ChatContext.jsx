@@ -30,11 +30,11 @@ const ChatProvider = ({ children }) => {
 		mutationFn: sendMessage,
 		onSettled: (data) => {
 			try {
-				setCurrentChat((prev) => {
-					prev.messages = [...data?.messages];
-					return prev;
-				});
-				console.log("data :>> ", data);
+				// setCurrentChat((prev) => {
+				// 	prev.messages = [...data?.messages];
+				// 	return prev;
+				// });
+
 				const newMessage = data.messages[data.messages?.length - 1];
 				const receiver = data.members.find((member) => member._id !== auth);
 				socket.emit("send_message", {

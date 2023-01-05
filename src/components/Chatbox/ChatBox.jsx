@@ -19,7 +19,8 @@ const ChatBox = () => {
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-y-scroll scroll">
-			{Array.isArray(messages) && messages?.map((message, index) => <ChatBubble messageData={message} key={index} />)}
+			{Array.isArray(currentChat.messages) &&
+				currentChat.messages?.map((message, index) => <ChatBubble messageData={message} key={index} />)}
 		</div>
 	);
 };

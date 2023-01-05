@@ -27,7 +27,7 @@ const ChatForm = () => {
 		reset,
 	} = useForm();
 	const { currentUser } = useContext(AuthContext);
-	const { currentChat, socket, setMessages } = useContext(AppContext);
+	const { currentChat, setCurrentChat } = useContext(AppContext);
 	const { sendMessageMutation } = useContext(ChatContext);
 	const chatInputRef = useRef(null);
 	const [cursorPosition, setCursorPosition] = useState(0);
@@ -50,19 +50,27 @@ const ChatForm = () => {
 	// send message
 	const handleSendMessage = async (data) => {
 		try {
+			console.log({
+				sender: currentUser,
+				...data,
+			});
 			if (data.text.length === 0 && data.file.length === 0) return;
 			if (data.file.length === 0) {
 				delete data.file;
 			} else {
 				data.file = await uploadImage(data.file[0]);
 			}
-			setMessages((prev) => [
-				...prev,
-				{
-					sender: currentUser._id,
-					...data,
-				},
-			]);
+			setCurrentChat((prev) => {
+				prev.messages = [
+					...prev.messages,
+					{
+						sender: currentUser,
+						...data,
+					},
+				];
+				return prev;
+			});
+			console.log();
 			sendMessageMutation.mutate({
 				chatId: currentChat._id,
 				message: {
