@@ -21,6 +21,7 @@ const AppProvider = ({ children }) => {
 	const currentUserVideoRef = useRef(null); // current user video ref
 
 	const [stream, setStream] = useState(null);
+	const [remoteStream, setRemoteStream] = useState(null);
 
 	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
 
@@ -49,6 +50,8 @@ const AppProvider = ({ children }) => {
 		socket.on("call_response", (data) => {
 			setCallStatus(true);
 			setCallAccepted(true);
+			remoteVideoRef.current.srcObject = remoteStream;
+			remoteVideoRef.current.play();
 		});
 		socket.on("end_call", (data) => {
 			setCallStatus(data.signal);
@@ -112,6 +115,7 @@ const AppProvider = ({ children }) => {
 			const call = instancePeer.current.call(currentChat.chattingUser?._id, mediaStream);
 			call.on("stream", (remoteStream) => {
 				console.log("remoteStream :>> ", remoteStream);
+				setRemoteStream(remoteStream);
 				remoteVideoRef.current.srcObject = remoteStream;
 				remoteVideoRef.current.play();
 			});
