@@ -87,6 +87,7 @@ const AppProvider = ({ children }) => {
 
 				call.answer(mediaStream);
 				call.on("stream", function (remoteStream) {
+					console.log(remoteStream);
 					setRemoteStream(remoteStream);
 					remoteVideoRef.current.srcObject = remoteStream;
 					remoteVideoRef.current.play();

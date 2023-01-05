@@ -46,18 +46,15 @@ const ChatForm = () => {
 		const rightOfCursorVal = message.substring(chatInputRef.current.selectionStart); // text on right side of cursor
 		chatInputRef.current.value = leftOfCursorVal + emoji + rightOfCursorVal;
 		setCursorPosition(leftOfCursorVal.length + emoji.length);
-		console.log("current cursor position:>>>>", cursorPosition);
 	};
 	// send message
 	const handleSendMessage = async (data) => {
 		try {
-			console.log(data);
 			if (data.text.length === 0 && data.file.length === 0) return;
 			if (data.file.length === 0) {
 				delete data.file;
 			} else {
 				data.file = await uploadImage(data.file[0]);
-				console.log("attach image :>> ", data.file);
 			}
 			sendMessageMutation.mutate({
 				chatId: currentChat._id,
