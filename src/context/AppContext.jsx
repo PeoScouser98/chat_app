@@ -21,7 +21,6 @@ const AppProvider = ({ children }) => {
 	const currentUserVideoRef = useRef(null); // current user video ref
 
 	const [stream, setStream] = useState(null);
-	const [remoteStream, setRemoteStream] = useState(null);
 
 	const socket = useMemo(() => io(import.meta.env.VITE_SERVER));
 
@@ -38,21 +37,18 @@ const AppProvider = ({ children }) => {
 		//  show video call modal if exist incoming call
 		socket.on("get_call", (data) => {
 			setCurrentChat(data.currentChat);
+
 			navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((mediaStream) => {
 				setStream(mediaStream);
 				currentUserVideoRef.current.srcObject = mediaStream;
 				currentUserVideoRef.current.play();
 			});
-			remoteVideoRef.current.srcObject = remoteStream;
-			remoteVideoRef.current.play();
 			setCommingCall(data);
 			setCallStatus(true);
 		});
 		socket.on("call_response", (data) => {
 			setCallStatus(true);
 			setCallAccepted(true);
-			remoteVideoRef.current.srcObject = remoteStream;
-			remoteVideoRef.current.play();
 		});
 		socket.on("end_call", (data) => {
 			setCallStatus(data.signal);
@@ -82,12 +78,12 @@ const AppProvider = ({ children }) => {
 			const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 			getUserMedia({ video: true, audio: true }, (mediaStream) => {
+				setStream(mediaStream);
 				currentUserVideoRef.current.srcObject = mediaStream;
 				currentUserVideoRef.current.play();
 
 				call.answer(mediaStream);
 				call.on("stream", function (remoteStream) {
-					setRemoteStream(remoteStream);
 					remoteVideoRef.current.srcObject = remoteStream;
 					remoteVideoRef.current.play();
 				});
@@ -108,8 +104,7 @@ const AppProvider = ({ children }) => {
 		const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 		getUserMedia({ video: true, audio: true }, (mediaStream) => {
 			// show media stream of call maker user
-			instancePeer.connect(currentChat.chattingUser);
-
+			setStream(mediaStream);
 			currentUserVideoRef.current.srcObject = mediaStream;
 			currentUserVideoRef.current.play();
 

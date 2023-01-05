@@ -26,7 +26,6 @@ const VideoCallModal = () => {
 		endCall, // end call action
 		answerCall, // answer call action
 	} = useContext(AppContext);
-	console.log("chatting user:>>>", currentChat.chattingUser);
 
 	return (
 		<Modal>
@@ -36,6 +35,7 @@ const VideoCallModal = () => {
 					<video
 						ref={currentUserVideoRef}
 						className="absolute w-24 h-20 top-0 left-0 z-[99] ring ring-success object-cover rounded-lg"
+						muted
 					></video>
 				</div>
 				<div className={callAccepted ? "hidden" : "flex flex-col items-center gap-4"}>
