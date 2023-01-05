@@ -13,6 +13,9 @@ const ChatBox = () => {
 		socket.on("receive_message", (newMessage) => {
 			setMessages((prev) => [...prev, newMessage]);
 		});
+		return () => {
+			socket.off("receive_message");
+		};
 	}, [currentChat, chatsList]);
 
 	return (
