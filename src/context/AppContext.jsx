@@ -11,7 +11,7 @@ const AppProvider = ({ children }) => {
 	const [currentChat, setCurrentChat] = useState(null);
 
 	const [chattingUser, setChattingUser] = useState(null);
-	const [messages, setMessages] = useState(() => currentChat?.messages);
+	const [messages, setMessages] = useState([]);
 	const [callStatus, setCallStatus] = useState(false); // status -> open or clost video call modal
 	const [callAccepted, setCallAccepted] = useState(false); // status that call is accepted by chatting user or not
 	const [commingCall, setCommingCall] = useState(); // call data including Call maker & Call listener
