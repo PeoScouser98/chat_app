@@ -8,7 +8,7 @@ const instance = axios.create({
 		"Content-Type": "application/json",
 	},
 });
-console.log(import.meta.env.VITE_BASE_URL);
+
 instance.interceptors.request.use(
 	(config) => {
 		const skipCheckingEndpoints = ["/signin", "/signup", "/refresh-token"];
