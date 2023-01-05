@@ -33,13 +33,11 @@ const Search = () => {
 		queryKey: ["searchUserChat", keywords],
 		queryFn: () => findUserChat(keywords),
 		enabled: keywords.length > 0,
-		onSuccess: (data) => console.log(data),
 	});
 
 	const debounceSearch = _.debounce(() => {
 		setKeywords(inputRef.current.value);
 		setResults(data);
-		console.log(data);
 	}, 1000);
 
 	const handleSelect = async (user) => {
