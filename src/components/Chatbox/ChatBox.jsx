@@ -4,9 +4,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import ChatBubble from "./ChatBubble";
 
 const ChatBox = () => {
-	const { currentChat, socket } = useContext(AppContext);
+	const { currentChat, socket, messages, setMessages } = useContext(AppContext);
 	const { chatsList } = useContext(ChatContext);
-	const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
 		setMessages(currentChat.messages);

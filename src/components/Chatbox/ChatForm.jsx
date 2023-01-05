@@ -27,7 +27,7 @@ const ChatForm = () => {
 		reset,
 	} = useForm();
 	const { currentUser } = useContext(AuthContext);
-	const { currentChat, socket } = useContext(AppContext);
+	const { currentChat, socket, setMessages } = useContext(AppContext);
 	const { sendMessageMutation } = useContext(ChatContext);
 	const chatInputRef = useRef(null);
 	const [cursorPosition, setCursorPosition] = useState(0);
@@ -63,6 +63,13 @@ const ChatForm = () => {
 					...data,
 				},
 			});
+			setMessages((prev) => [
+				...prev,
+				{
+					sender: currentUser._id,
+					...data,
+				},
+			]);
 			reset();
 		} catch (error) {
 			console.log(error.message);
