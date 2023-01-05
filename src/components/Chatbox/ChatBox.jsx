@@ -8,13 +8,14 @@ const ChatBox = () => {
 	const { chatsList } = useContext(ChatContext);
 
 	useEffect(() => {
+		setMessages(currentChat.messages);
 		socket.on("receive_message", (newMessage) => {
 			setMessages((prev) => [...prev, newMessage]);
 		});
 		return () => {
 			socket.off("receive_message");
 		};
-	}, [currentChat, chatsList]);
+	}, [currentChat, chatsList, socket]);
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4 overflow-y-scroll scroll">
