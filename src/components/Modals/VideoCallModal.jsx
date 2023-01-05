@@ -31,7 +31,11 @@ const VideoCallModal = () => {
 		<Modal>
 			<ModalWrapper>
 				<div className={callAccepted ? "relative w-full h-56" : "hidden"}>
-					<video ref={remoteVideoRef} className="w-full h-full object-cover rounded-lg shadow-2xl"></video>
+					<video
+						ref={remoteVideoRef}
+						className="w-full h-full object-cover rounded-lg shadow-2xl"
+						muted={!callAccepted}
+					></video>
 					<video
 						ref={currentUserVideoRef}
 						className="absolute w-24 h-20 top-0 left-0 z-[99] ring ring-success object-cover rounded-lg"
