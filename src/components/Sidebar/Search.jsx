@@ -13,6 +13,9 @@ import { useQuery } from "react-query";
 import { useRef } from "react";
 import Loading from "../Loading";
 import { AppContext } from "../../context/AppContext";
+import { Menu, MenuItem } from "../Menu";
+import UserControl from "./UserControl";
+import UserInfo from "../UserInfo";
 
 const SearchControl = tw.div`flex justify-start items-center gap-2 bg-base-200 px-4 py-2 rounded-md `;
 const SearchInput = tw.input`input input-sm focus:outline-none bg-inherit flex-1`;
@@ -36,6 +39,7 @@ const Search = () => {
 	const debounceSearch = _.debounce(() => {
 		setKeywords(inputRef.current.value);
 		setResults(data);
+		console.log(data);
 	}, 1000);
 
 	const handleSelect = async (user) => {
@@ -58,22 +62,16 @@ const Search = () => {
 				<SearchInput type="search" placeholder="Find an user ..." ref={inputRef} onChange={debounceSearch} />
 				{isFetching && <Loading />}
 			</SearchControl>
-			<SearchResults tabIndex={0}>
+			<Menu>
 				{Array.isArray(results) &&
 					results.map((user, index) => {
 						return (
-							<li onClick={() => handleSelect(user)} key={index}>
-								<div className="flex justify-between items-center gap-5">
-									<div className="flex items-center gap-3">
-										<Avatar style={{ width: "32px", height: "32px" }} imageUrl={user?.avatar} />
-										<h3>{user?.username}</h3>
-									</div>
-									<BsChatSquareText className="text-lg" />
-								</div>
-							</li>
+							<MenuItem callback={() => handleSelect(user)} key={index}>
+								<UserInfo avatar={user?.avatar} username={user?.username}></UserInfo>
+							</MenuItem>
 						);
 					})}
-			</SearchResults>
+			</Menu>
 		</div>
 	);
 };

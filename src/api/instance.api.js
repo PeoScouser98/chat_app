@@ -3,8 +3,12 @@ import { refreshToken } from "./user.api";
 
 const instance = axios.create({
 	baseURL: import.meta.env.VITE_BASE_URL,
+	headers: {
+		"Access-Control-Allow-Origin": "*",
+		"Content-Type": "application/json",
+	},
 });
-
+console.log(import.meta.env.VITE_BASE_URL);
 instance.interceptors.request.use(
 	(config) => {
 		const skipCheckingEndpoints = ["/signin", "/signup", "/refresh-token"];

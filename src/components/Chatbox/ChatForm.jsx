@@ -18,7 +18,7 @@ import uploadImage from "@/firebase/upload";
 const Form = tw.form`relative w-full flex justify-between items-center p-1 `;
 const FormInput = tw.input`input input-bordered flex-1 focus:boder-2 focus:border-primary focus:outline-none text-white`;
 const FormButtonGroup = tw.div`flex justify-end items-center gap-4 absolute top-1/2 -translate-y-1/2 right-2`;
-
+const Dropdown = tw.div``;
 const ChatForm = () => {
 	const {
 		register,

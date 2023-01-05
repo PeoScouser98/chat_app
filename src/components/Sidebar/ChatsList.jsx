@@ -5,6 +5,7 @@ import { ChatContext } from "../../context/ChatContext";
 import UserInfo from "../UserInfo";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { useEffect } from "react";
+import { Menu, MenuItem } from "../Menu";
 
 const ChatsList = () => {
 	const { chatsList, setChatsList } = useContext(ChatContext);
@@ -27,11 +28,11 @@ const ChatsList = () => {
 		});
 	}, [socket]);
 	return (
-		<ul className="menu">
+		<Menu>
 			{Array.isArray(chatsList) &&
 				chatsList.map((chat) => {
 					return (
-						<li onClick={() => setCurrentChat(chat)} key={chat?._id}>
+						<MenuItem callback={() => setCurrentChat(chat)} key={chat?._id}>
 							<UserInfo
 								avatar={chat.chattingUser?.avatar}
 								username={chat.chattingUser?.username}
@@ -39,10 +40,10 @@ const ChatsList = () => {
 							>
 								<span>{chat.lastestMessage}</span>
 							</UserInfo>
-						</li>
+						</MenuItem>
 					);
 				})}
-		</ul>
+		</Menu>
 	);
 };
 
