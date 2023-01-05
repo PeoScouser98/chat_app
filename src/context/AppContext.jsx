@@ -38,7 +38,6 @@ const AppProvider = ({ children }) => {
 		//  show video call modal if exist incoming call
 		socket.on("get_call", (data) => {
 			setCurrentChat(data.currentChat);
-
 			navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((mediaStream) => {
 				setStream(mediaStream);
 				currentUserVideoRef.current.srcObject = mediaStream;
@@ -83,7 +82,6 @@ const AppProvider = ({ children }) => {
 			const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 			getUserMedia({ video: true, audio: true }, (mediaStream) => {
-				setStream(mediaStream);
 				currentUserVideoRef.current.srcObject = mediaStream;
 				currentUserVideoRef.current.play();
 
@@ -110,7 +108,8 @@ const AppProvider = ({ children }) => {
 		const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 		getUserMedia({ video: true, audio: true }, (mediaStream) => {
 			// show media stream of call maker user
-			setStream(mediaStream);
+			instancePeer.connect(currentChat.chattingUser);
+
 			currentUserVideoRef.current.srcObject = mediaStream;
 			currentUserVideoRef.current.play();
 
