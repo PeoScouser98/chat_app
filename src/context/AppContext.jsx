@@ -57,6 +57,10 @@ const AppProvider = ({ children }) => {
 			setCallStatus(data.signal);
 			setCallAccepted(data.signal);
 			setCommingCall(undefined);
+			if (remoteStream) {
+				const remoteMediaTracks = remoteStream.getTracks();
+				remoteMediaTracks.forEach((track) => track.stop());
+			}
 			if (stream) {
 				const mediaTracks = stream.getTracks();
 				mediaTracks.forEach((track) => track.stop());
@@ -138,6 +142,7 @@ const AppProvider = ({ children }) => {
 		setCommingCall(undefined);
 		const mediaTracks = stream.getTracks();
 		mediaTracks.forEach((track) => track.stop());
+
 		socket.emit("end_call", {
 			receiver: currentChat.chattingUser,
 			signal: false,
