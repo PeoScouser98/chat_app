@@ -56,13 +56,6 @@ const ChatForm = () => {
 			} else {
 				data.file = await uploadImage(data.file[0]);
 			}
-			sendMessageMutation.mutate({
-				chatId: currentChat._id,
-				message: {
-					sender: currentUser._id,
-					...data,
-				},
-			});
 			setMessages((prev) => [
 				...prev,
 				{
@@ -70,6 +63,13 @@ const ChatForm = () => {
 					...data,
 				},
 			]);
+			sendMessageMutation.mutate({
+				chatId: currentChat._id,
+				message: {
+					sender: currentUser._id,
+					...data,
+				},
+			});
 			reset();
 		} catch (error) {
 			console.log(error.message);
