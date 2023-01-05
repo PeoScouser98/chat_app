@@ -9,7 +9,8 @@ const ChatContext = createContext({});
 
 const ChatProvider = ({ children }) => {
 	const [chatsList, setChatsList] = useState([]);
-	// const { authenticated,  } = useContext(AuthContext);
+	const [messages, setMessages] = useState([]);
+
 	const { socket, setCurrentChat } = useContext(AppContext);
 	const [auth] = useLocalStorage("auth");
 	const queryClient = useQueryClient();
@@ -28,25 +29,7 @@ const ChatProvider = ({ children }) => {
 	const sendMessageMutation = useMutation({
 		mutationKey: ["chats"],
 		mutationFn: sendMessage,
-		onSettled: (data) => {
-			try {
-				// setCurrentChat((prev) => {
-				// 	prev.messages = [...data?.messages];
-				// 	return prev;
-				// });
-
-				const newMessage = data.messages[data.messages?.length - 1];
-				const receiver = data.members.find((member) => member._id !== auth);
-				socket.emit("send_message", {
-					chatId: data._id,
-					...newMessage,
-					receiver,
-				});
-			} catch (error) {
-				console.log("error :>> ", error);
-			}
-		},
-		onSuccess: (data) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries("chats");
 		},
 	});
@@ -59,7 +42,9 @@ const ChatProvider = ({ children }) => {
 	});
 
 	return (
-		<ChatContext.Provider value={{ chatsList, setChatsList, sendMessageMutation, createNewChatMutation }}>
+		<ChatContext.Provider
+			value={{ chatsList, setChatsList, sendMessageMutation, createNewChatMutation, messages, setMessages }}
+		>
 			{children}
 		</ChatContext.Provider>
 	);
