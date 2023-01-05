@@ -8,7 +8,6 @@ const ChatBox = () => {
 	const { chatsList } = useContext(ChatContext);
 
 	useEffect(() => {
-		setMessages(currentChat.messages);
 		socket.on("receive_message", (newMessage) => {
 			setMessages((prev) => [...prev, newMessage]);
 		});
