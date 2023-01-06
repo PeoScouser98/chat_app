@@ -20,7 +20,9 @@ export const signup = async (data) => {
 
 export const getUser = async () => {
 	try {
-		return await instance.get("/user");
+		const user = await instance.get("/user");
+		console.log(user);
+		return user;
 	} catch (error) {
 		console.log(error.message);
 	}

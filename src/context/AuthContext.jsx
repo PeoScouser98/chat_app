@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import instance from "@/api/instance.api";
+import { useEffect } from "react";
 import { createContext, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import instance from "../api/instance.api";
 import { getUser } from "../api/user.api";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 const AuthContext = createContext({});
 
@@ -16,25 +15,25 @@ const AuthProvider = ({ children }) => {
 	useQuery({
 		queryKey: ["auth"],
 		queryFn: getUser,
-		enabled: instance.getAccessToken() !== null,
+		enabled: authenticated,
 		onSuccess: (data) => {
-			if (data.status === 200) {
-				navigate("/");
-				setCurrentUser(data.user);
-				setAuthenticated(true);
-			}
-			if (data.status === 401) {
-				navigate("/signin");
-				setCurrentUser(null);
-				setAuthenticated(false);
-			}
+			navigate("/");
+			setCurrentUser(data?.user);
+			setAuthenticated(true);
 		},
-		retryOnMount: true,
+		retryOnMount: authenticated,
+		refetchOnMount: authenticated,
 	});
 
 	const handleAuthStateChange = () => {
 		setAuthenticated(!authenticated);
 	};
+
+	useEffect(() => {
+		const accessToken = instance.getAccessToken();
+
+		setAuthenticated(accessToken !== null);
+	}, [authenticated]);
 
 	return (
 		<AuthContext.Provider

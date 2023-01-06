@@ -11,12 +11,12 @@ const ChatProvider = ({ children }) => {
 	const [chatsList, setChatsList] = useState([]);
 	const [messages, setMessages] = useState([]);
 
-	const { socket, setCurrentChat } = useContext(AppContext);
+	const { authenticated } = useContext(AuthContext);
 	const [auth] = useLocalStorage("auth");
 	const queryClient = useQueryClient();
 	const { data } = useQuery({
 		queryKey: ["chats"],
-		enabled: true,
+		enabled: authenticated,
 		queryFn: getChats,
 		onSettled: (data) => {
 			data.forEach((chat) => {

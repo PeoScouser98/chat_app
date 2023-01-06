@@ -5,6 +5,7 @@ import { signin } from "../api/user.api";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 // * styled components
 const Hero = tw.div`hero min-h-screen bg-base-200`;
@@ -19,12 +20,14 @@ const Signin = () => {
 		handleSubmit,
 	} = useForm();
 	const navigate = useNavigate();
-	const { setAuthenticated } = useContext(AuthContext);
+	const { authenticated, setAuthenticated, handleAuthStateChange } = useContext(AuthContext);
+
 	const handleSignin = async (data) => {
 		try {
 			const { accessToken, auth } = await signin(data);
 			if (accessToken && auth) {
 				setAuthenticated(true);
+
 				localStorage.setItem("accessToken", accessToken);
 				localStorage.setItem("auth", auth);
 				toast.success("Signed in successfully!");
